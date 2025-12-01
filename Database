@@ -1,0 +1,39 @@
+-- 1. Tabel User
+CREATE TABLE users (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nama_lengkap VARCHAR(100) NOT NULL,
+    divisi VARCHAR(50) NOT NULL,
+    role ENUM('admin', 'user') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Tabel Barang
+CREATE TABLE barang (
+    id_barang INT AUTO_INCREMENT PRIMARY KEY,
+    nama_barang VARCHAR(100) NOT NULL,
+    stok_total INT NOT NULL,
+    foto_barang VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Tabel Peminjaman
+CREATE TABLE peminjaman (
+    id_pinjam INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,
+    id_barang INT,
+    jumlah INT NOT NULL,
+    tanggal_pinjam DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_kembali DATETIME NULL,
+    status ENUM('pending', 'dipinjam', 'dikembalikan', 'ditolak') DEFAULT 'pending',
+    bukti_pinjam VARCHAR(255), -- Foto saat ambil/surat tugas
+    bukti_kembali VARCHAR(255), -- Foto saat kembali
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_barang) REFERENCES barang(id_barang)
+);
+
+-- 4. Akun Admin Default (Password: admin123)
+-- Kita pakai MD5 atau Password_Hash nanti di kodingan, ini contoh manual insert
+INSERT INTO users (email, password, nama_lengkap, divisi, role) 
+VALUES ('admin@instansi.go.id', '$2y$10$8.uZ/8...HASHED_PASSWORD_HERE...', 'Kepala Perlengkapan', 'Perlengkapan', 'admin');
